@@ -73,7 +73,6 @@ func TestBrailleMatrixToRune(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
 			result := tc.matrix.ToRune()
-			fmt.Printf("Result: %s\n", string(result))
 			if result != tc.expected {
 				t.Errorf("Expected %U, but got %U", tc.expected, result)
 			}
