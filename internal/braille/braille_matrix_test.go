@@ -1,9 +1,6 @@
 package braille
 
-import (
-	"fmt"
-	"testing"
-)
+import "testing"
 
 type TestCase struct {
 	testName string
