@@ -57,6 +57,7 @@ func (b BrailleMatrix) ToRune() rune {
 	return rune(sum) + '\u2800'
 }
 
+// ToString converts the BrailleMatrix to its string representation,
 func (b BrailleMatrix) ToString() string {
 	return string(b.ToRune())
 }
