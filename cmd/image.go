@@ -1,14 +1,16 @@
 package cmd
 
 import (
+	"github.com/HeberDamianAlturria/converter-to-braille/internal/imageproc"
+	"github.com/HeberDamianAlturria/converter-to-braille/internal/loader"
+	"github.com/HeberDamianAlturria/converter-to-braille/internal/output"
+	"github.com/spf13/cobra"
 	"os"
 	"strings"
-	"github.com/spf13/cobra"
-	"github.com/HeberDamianAlturria/converter-to-braille/internal/loader"
-	"github.com/HeberDamianAlturria/converter-to-braille/internal/imageproc"
 )
 
 var inverted bool
+var outputPath string
 
 var imageCmd = &cobra.Command{
 	Use:   "image [path]",
@@ -28,19 +30,25 @@ func runImageCmd(cmd *cobra.Command, args []string) {
 	}
 
 	imgProc := imageproc.New(img)
-	
+
 	var strBuilder strings.Builder
 
 	imgProc.WriteToBrille(&strBuilder, inverted)
 
-	cmd.Println(strBuilder.String())
+	if outputPath != "" {
+		err = output.SaveTextFile(outputPath, strBuilder.String())
+		if err != nil {
+			cmd.PrintErrln("Error writing to file:", err)
+			os.Exit(1)
+		}
+	} else {
+		cmd.Println(strBuilder.String())
+	}
 }
-
 
 func init() {
 	imageCmd.Flags().BoolVarP(&inverted, "inverted", "i", false, "Invert braille colors")
+	imageCmd.Flags().StringVarP(&outputPath, "output", "o", "", "Output file path (default: stdout)")
 
 	rootCmd.AddCommand(imageCmd)
 }
-
-
