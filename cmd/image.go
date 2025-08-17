@@ -23,7 +23,7 @@ var imageCmd = &cobra.Command{
 func runImageCmd(cmd *cobra.Command, args []string) {
 	path := args[0]
 
-	img, err := loader.FromFile(path)
+	img, err := loader.FromImageFile(path)
 	if err != nil {
 		cmd.PrintErrln("Error loading image:", err)
 		os.Exit(1)
