@@ -4,15 +4,14 @@ import (
 	"github.com/HeberDamianAlturria/converter-to-braille/internal/imageproc"
 	"github.com/HeberDamianAlturria/converter-to-braille/internal/loader"
 	"github.com/spf13/cobra"
-	"image"
 	"os"
 	"strings"
 	"time"
 )
 
 type GifOptions struct {
-    Inverted   bool
-    OutputPath string
+	Inverted   bool
+	OutputPath string
 }
 
 var gifOpts GifOptions
@@ -28,26 +27,24 @@ var gifCmd = &cobra.Command{
 func runGifCmd(cmd *cobra.Command, args []string) {
 	path := args[0]
 
-	gif, err := loader.FromGifFile(path)
+	frames, err := loader.FromGifFileReconstructed(path)
 	if err != nil {
 		cmd.PrintErrln("Error loading image:", err)
 		os.Exit(1)
 	}
 
-	for i, frame := range gif.Image {
-		img := image.Image(frame)
-
-		imgProc := imageproc.New(img)
+	for _, frame := range frames {
+		imgProc := imageproc.New(frame.Image)
 
 		var strBuilder strings.Builder
 
 		imgProc.WriteToBrille(&strBuilder, gifOpts.Inverted)
 
 		cmd.Print("\033[H\033[2J") // Clear terminal
-		
+
 		cmd.Println(strBuilder.String())
 
-		delay := time.Duration(gif.Delay[i]) * 10 * time.Millisecond
+		delay := time.Duration(frame.Delay) * 10 * time.Millisecond
 
 		time.Sleep(delay)
 	}
