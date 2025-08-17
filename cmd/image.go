@@ -8,6 +8,8 @@ import (
 	"github.com/HeberDamianAlturria/converter-to-braille/internal/imageproc"
 )
 
+var inverted bool
+
 var imageCmd = &cobra.Command{
 	Use:   "image [path]",
 	Short: "Convert an image to braille",
@@ -29,13 +31,15 @@ func runImageCmd(cmd *cobra.Command, args []string) {
 	
 	var strBuilder strings.Builder
 
-	imgProc.WriteToBrille(&strBuilder)
+	imgProc.WriteToBrille(&strBuilder, inverted)
 
 	cmd.Println(strBuilder.String())
 }
 
 
 func init() {
+	imageCmd.Flags().BoolVarP(&inverted, "inverted", "i", false, "Invert brille colors")
+
 	rootCmd.AddCommand(imageCmd)
 }
 

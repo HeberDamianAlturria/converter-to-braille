@@ -24,7 +24,7 @@ func (imgproc *ImageProc) applyFloydSteinbergDithering() {
 	imgproc.img = paletted
 }
 
-func (imgproc *ImageProc) WriteToBrille(strBuilder *strings.Builder) {
+func (imgproc *ImageProc) WriteToBrille(strBuilder *strings.Builder, inverted bool) {
 	imgproc.applyFloydSteinbergDithering()
 
 	imgBounds := imgproc.img.Bounds()
@@ -41,11 +41,7 @@ func (imgproc *ImageProc) WriteToBrille(strBuilder *strings.Builder) {
 
 					colorAtPixel := imgproc.img.At(pixelX+dotX, pixelY+dotY)
 
-					if colorAtPixel == color.Black {
-						brailleMatrix[dotX][dotY] = 0
-					} else {
-						brailleMatrix[dotX][dotY] = 1
-					}
+					brailleMatrix.SetFromColor(dotX, dotY, colorAtPixel, inverted)
 				}
 			}
 
