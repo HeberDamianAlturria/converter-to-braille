@@ -9,8 +9,12 @@ import (
 	"strings"
 )
 
-var inverted bool
-var outputPath string
+type ImageOptions struct {
+    Inverted   bool
+    OutputPath string
+}
+
+var imageOpts ImageOptions
 
 var imageCmd = &cobra.Command{
 	Use:   "image [path]",
@@ -23,7 +27,7 @@ var imageCmd = &cobra.Command{
 func runImageCmd(cmd *cobra.Command, args []string) {
 	path := args[0]
 
-	img, err := loader.FromFile(path)
+	img, err := loader.FromImageFile(path)
 	if err != nil {
 		cmd.PrintErrln("Error loading image:", err)
 		os.Exit(1)
@@ -33,10 +37,10 @@ func runImageCmd(cmd *cobra.Command, args []string) {
 
 	var strBuilder strings.Builder
 
-	imgProc.WriteToBrille(&strBuilder, inverted)
+	imgProc.WriteToBrille(&strBuilder, imageOpts.Inverted)
 
-	if outputPath != "" {
-		err = output.SaveTextFile(outputPath, strBuilder.String())
+	if imageOpts.OutputPath != "" {
+		err = output.SaveTextFile(imageOpts.OutputPath, strBuilder.String())
 		if err != nil {
 			cmd.PrintErrln("Error writing to file:", err)
 			os.Exit(1)
@@ -47,8 +51,8 @@ func runImageCmd(cmd *cobra.Command, args []string) {
 }
 
 func init() {
-	imageCmd.Flags().BoolVarP(&inverted, "inverted", "i", false, "Invert braille colors")
-	imageCmd.Flags().StringVarP(&outputPath, "output", "o", "", "Output file path (default: stdout)")
+	imageCmd.Flags().BoolVarP(&imageOpts.Inverted, "inverted", "i", false, "Invert braille colors")
+	imageCmd.Flags().StringVarP(&imageOpts.OutputPath, "output", "o", "", "Output file path (default: stdout)")
 
 	rootCmd.AddCommand(imageCmd)
 }

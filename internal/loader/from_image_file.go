@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func FromFile(path string) (image.Image, error) {
+func FromImageFile(path string) (image.Image, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
