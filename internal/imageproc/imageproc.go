@@ -35,8 +35,13 @@ func (imgproc *ImageProc) WriteToBrille(strBuilder *strings.Builder) {
 
 			for dotY := 0; dotY < 4; dotY++ {
 				for dotX := 0; dotX < 2; dotX++ {
+					if pixelY+dotY >= imgBounds.Max.Y || pixelX+dotX >= imgBounds.Max.X {
+						continue
+					}
+
 					colorAtPixel := imgproc.img.At(pixelX+dotX, pixelY+dotY)
-					if colorAtPixel == color.Black || colorAtPixel == color.Transparent {
+
+					if colorAtPixel == color.Black {
 						brailleMatrix[dotX][dotY] = 1
 					} else {
 						brailleMatrix[dotX][dotY] = 0
