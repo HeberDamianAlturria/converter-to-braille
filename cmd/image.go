@@ -38,7 +38,7 @@ func runImageCmd(cmd *cobra.Command, args []string) {
 
 
 func init() {
-	imageCmd.Flags().BoolVarP(&inverted, "inverted", "i", false, "Invert brille colors")
+	imageCmd.Flags().BoolVarP(&inverted, "inverted", "i", false, "Invert braille colors")
 
 	rootCmd.AddCommand(imageCmd)
 }
