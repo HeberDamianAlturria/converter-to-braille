@@ -9,25 +9,25 @@ import (
 )
 
 type ImageProc struct {
-	img image.Image
+	Img image.Image
 }
 
 func New(img image.Image) *ImageProc {
-	return &ImageProc{img: img}
+	return &ImageProc{Img: img}
 }
 
 func (imgproc *ImageProc) applyFloydSteinbergDithering() {
-	paletted := image.NewPaletted(imgproc.img.Bounds(), []color.Color{color.Black, color.White, color.Transparent})
+	paletted := image.NewPaletted(imgproc.Img.Bounds(), []color.Color{color.Black, color.White, color.Transparent})
 
-	draw.FloydSteinberg.Draw(paletted, paletted.Bounds(), imgproc.img, imgproc.img.Bounds().Min)
+	draw.FloydSteinberg.Draw(paletted, paletted.Bounds(), imgproc.Img, imgproc.Img.Bounds().Min)
 
-	imgproc.img = paletted
+	imgproc.Img = paletted
 }
 
 func (imgproc *ImageProc) WriteToBrille(strBuilder *strings.Builder, inverted bool) {
 	imgproc.applyFloydSteinbergDithering()
 
-	imgBounds := imgproc.img.Bounds()
+	imgBounds := imgproc.Img.Bounds()
 
 	for pixelY := imgBounds.Min.Y; pixelY < imgBounds.Max.Y; pixelY += 4 {
 		for pixelX := imgBounds.Min.X; pixelX < imgBounds.Max.X; pixelX += 2 {
@@ -39,7 +39,7 @@ func (imgproc *ImageProc) WriteToBrille(strBuilder *strings.Builder, inverted bo
 						continue
 					}
 
-					colorAtPixel := imgproc.img.At(pixelX+dotX, pixelY+dotY)
+					colorAtPixel := imgproc.Img.At(pixelX+dotX, pixelY+dotY)
 
 					brailleMatrix.SetFromColor(dotX, dotY, colorAtPixel, inverted)
 				}
