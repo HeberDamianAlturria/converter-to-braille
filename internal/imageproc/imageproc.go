@@ -42,9 +42,9 @@ func (imgproc *ImageProc) WriteToBrille(strBuilder *strings.Builder) {
 					colorAtPixel := imgproc.img.At(pixelX+dotX, pixelY+dotY)
 
 					if colorAtPixel == color.Black {
-						brailleMatrix[dotX][dotY] = 1
-					} else {
 						brailleMatrix[dotX][dotY] = 0
+					} else {
+						brailleMatrix[dotX][dotY] = 1
 					}
 				}
 			}
