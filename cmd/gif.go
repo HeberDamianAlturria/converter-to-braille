@@ -11,7 +11,6 @@ import (
 
 type GifOptions struct {
 	Inverted   bool
-	OutputPath string
 }
 
 var gifOpts GifOptions
