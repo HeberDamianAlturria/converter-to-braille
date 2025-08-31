@@ -27,7 +27,7 @@ var gifCmd = &cobra.Command{
 func runGifCmd(cmd *cobra.Command, args []string) {
 	path := args[0]
 
-	frames, err := loader.FromGifFileReconstructed(path)
+	frames, err := loader.GetGifReconstructed(path)
 	if err != nil {
 		cmd.PrintErrln("Error loading image:", err)
 		os.Exit(1)

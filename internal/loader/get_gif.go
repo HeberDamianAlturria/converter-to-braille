@@ -4,7 +4,9 @@ import (
 	"image"
 	"image/draw"
 	"image/gif"
+	"net/http"
 	"os"
+	"strings"
 )
 
 type ReconstructedFrame struct {
@@ -12,18 +14,34 @@ type ReconstructedFrame struct {
 	Delay int
 }
 
-// FromGifFileReconstructed loads a GIF file and reconstructs its frames into a slice of ReconstructedFrame.
-// We need to know that not all the frames of a GIF are a complete image, so we need to manage this scenario.
-func FromGifFileReconstructed(path string) ([]ReconstructedFrame, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
+// GetGifReconstructed loads a GIF from a file path or URL and reconstructs its frames into a slice of ReconstructedFrame.
+func GetGifReconstructed(path string) ([]ReconstructedFrame, error) {
+	var (
+		g        *gif.GIF
+		gifError error
+	)
 
-	g, err := gif.DecodeAll(f)
-	if err != nil {
-		return nil, err
+	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
+
+		response, err := http.Get(path)
+		if err != nil {
+			return nil, err
+		}
+		defer response.Body.Close()
+
+		g, gifError = gif.DecodeAll(response.Body)
+	} else {
+		file, err := os.Open(path)
+		if err != nil {
+			return nil, err
+		}
+		defer file.Close()
+
+		g, gifError = gif.DecodeAll(file)
+	}
+
+	if gifError != nil {
+		return nil, gifError
 	}
 
 	canvas := image.NewPaletted(g.Image[0].Bounds(), g.Image[0].Palette) // Canvas to draw frames on
