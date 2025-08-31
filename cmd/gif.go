@@ -10,8 +10,8 @@ import (
 )
 
 type GifOptions struct {
-	Inverted   bool
-	OutputPath string
+	Inverted bool
+	Loop     bool
 }
 
 var gifOpts GifOptions
@@ -19,7 +19,7 @@ var gifOpts GifOptions
 var gifCmd = &cobra.Command{
 	Use:   "gif [path]",
 	Short: "Convert an gif to braille",
-	Long:  "Convert an gif to braille ASCII art",
+	Long:  "Convert an gif to braille ASCII art. The path must be a valid file path or URL.",
 	Args:  cobra.ExactArgs(1),
 	Run:   runGifCmd,
 }
@@ -27,31 +27,43 @@ var gifCmd = &cobra.Command{
 func runGifCmd(cmd *cobra.Command, args []string) {
 	path := args[0]
 
-	frames, err := loader.FromGifFileReconstructed(path)
+	frames, err := loader.GetGifReconstructed(path)
 	if err != nil {
 		cmd.PrintErrln("Error loading image:", err)
 		os.Exit(1)
 	}
 
-	for _, frame := range frames {
-		imgProc := imageproc.New(frame.Image)
+	play := func() {
+		for _, frame := range frames {
+			imgProc := imageproc.New(frame.Image)
 
-		var strBuilder strings.Builder
+			var strBuilder strings.Builder
 
-		imgProc.WriteToBrille(&strBuilder, gifOpts.Inverted)
+			imgProc.WriteToBrille(&strBuilder, gifOpts.Inverted)
 
-		cmd.Print("\033[H\033[2J") // Clear terminal
+			cmd.Print("\033[H\033[2J") // Clear terminal
 
-		cmd.Println(strBuilder.String())
+			cmd.Println(strBuilder.String())
 
-		delay := time.Duration(frame.Delay) * 10 * time.Millisecond
+			delay := time.Duration(frame.Delay) * 10 * time.Millisecond
 
-		time.Sleep(delay)
+			time.Sleep(delay)
+		}
 	}
+
+	if gifOpts.Loop {
+		for {
+			play()
+		}
+	} else {
+		play()
+	}
+
 }
 
 func init() {
 	gifCmd.Flags().BoolVarP(&gifOpts.Inverted, "inverted", "i", false, "Invert braille colors")
+	gifCmd.Flags().BoolVarP(&gifOpts.Loop, "loop", "l", false, "Loop the GIF animation")
 
 	rootCmd.AddCommand(gifCmd)
 }
