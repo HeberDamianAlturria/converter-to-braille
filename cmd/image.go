@@ -10,16 +10,16 @@ import (
 )
 
 type ImageOptions struct {
-    Inverted   bool
-    OutputPath string
+	Inverted   bool
+	OutputPath string
 }
 
 var imageOpts ImageOptions
 
 var imageCmd = &cobra.Command{
 	Use:   "image [path]",
-	Short: "Convert an image to braille",
-	Long:  "Convert an image to braille ASCII art",
+	Short: "Convert an image to braille.",
+	Long:  "Convert an image to braille ASCII art. The path must be a valid image file or URL.",
 	Args:  cobra.ExactArgs(1),
 	Run:   runImageCmd,
 }
@@ -27,7 +27,8 @@ var imageCmd = &cobra.Command{
 func runImageCmd(cmd *cobra.Command, args []string) {
 	path := args[0]
 
-	img, err := loader.FromImageFile(path)
+	img, err := loader.GetImage(path)
+
 	if err != nil {
 		cmd.PrintErrln("Error loading image:", err)
 		os.Exit(1)
