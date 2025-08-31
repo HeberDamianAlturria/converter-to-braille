@@ -18,8 +18,8 @@ var imageOpts ImageOptions
 
 var imageCmd = &cobra.Command{
 	Use:   "image [path]",
-	Short: "Convert an image to braille",
-	Long:  "Convert an image to braille ASCII art",
+	Short: "Convert an image to braille.",
+	Long:  "Convert an image to braille ASCII art. The path must be a valid image file or URL.",
 	Args:  cobra.ExactArgs(1),
 	Run:   runImageCmd,
 }
