@@ -26,12 +26,11 @@ And finally, we can run the program:
 
 This CLI tool supports the following features:
 
-- Convert images to braille ASCII art and print them to the console.
+- Convert images to braille ASCII art and print them to the console. The images can be loaded from local files or URLs.
 - Convert images to braille ASCII art and save them to a file.
 - Convert GIFs to braille ASCII art and print them to the console.
 
 ## Future improvements.
 
-- Add support to get the image from a URL.
 - Add support to get the GIF from a URL.
 - Save the braille ASCII art as a image file or a GIF file (as appropriate).
