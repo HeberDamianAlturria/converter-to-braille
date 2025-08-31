@@ -10,8 +10,8 @@ import (
 )
 
 type ImageOptions struct {
-    Inverted   bool
-    OutputPath string
+	Inverted   bool
+	OutputPath string
 }
 
 var imageOpts ImageOptions
@@ -27,7 +27,8 @@ var imageCmd = &cobra.Command{
 func runImageCmd(cmd *cobra.Command, args []string) {
 	path := args[0]
 
-	img, err := loader.FromImageFile(path)
+	img, err := loader.GetImage(path)
+
 	if err != nil {
 		cmd.PrintErrln("Error loading image:", err)
 		os.Exit(1)
