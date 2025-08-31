@@ -19,7 +19,7 @@ var gifOpts GifOptions
 var gifCmd = &cobra.Command{
 	Use:   "gif [path]",
 	Short: "Convert an gif to braille",
-	Long:  "Convert an gif to braille ASCII art",
+	Long:  "Convert an gif to braille ASCII art. The path must be a valid file path or URL.",
 	Args:  cobra.ExactArgs(1),
 	Run:   runGifCmd,
 }
